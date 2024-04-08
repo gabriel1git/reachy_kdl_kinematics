@@ -1,0 +1,227 @@
+<?xml version="1.0"?>
+<robot name="reachy">
+
+<!-- Torso Link -->
+
+<link name="pedestal"/>
+
+<link name="torso">
+    <visual name="">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+            <mesh filename="package://reachy/meshes/torso.dae"/>
+        </geometry>
+    </visual>
+    <collision>
+        <origin xyz="0 0 -0.1" rpy="0 0.05 0" />
+        <geometry>
+            <box size="0.11 0.2 0.32" />
+        </geometry>
+    </collision>
+</link>
+<!-- Right Arm Links -->
+
+<link name="r_shoulder">
+    <visual name="">
+        <origin xyz="0.0 0.04 0.0" rpy="1.57 1.57 0.0"/>
+        <geometry>
+            <mesh filename="package://reachy/meshes/shoulder.dae"/>
+        </geometry>
+    </visual>
+    <collision>
+        <origin xyz="0.0 0.04 0.0" rpy="1.57 1.57 0.0"/>
+        <geometry>
+            <cylinder length="0.09" radius="0.035" />
+        </geometry>
+    </collision>
+</link>
+
+<link name="r_shoulder_x">
+    <visual name="">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+            <mesh filename="package://reachy/meshes/shoulder_x.dae"/>
+        </geometry>
+    </visual>
+    <collision>
+        <origin xyz="0 0 -0.02" rpy="0.0 0.0 0.0"/>
+        <geometry>
+            <cylinder length="0.04" radius="0.035" />
+        </geometry>
+    </collision>
+</link>
+
+<link name="r_upper_arm">
+    <visual name="">
+        <origin xyz="0.0 0.0 -0.0526" rpy="0.0 0.0 0.0"/>
+        <geometry>
+            <mesh filename="package://reachy/meshes/upper_arm.dae"/>
+        </geometry>
+    </visual>
+    <collision>
+        <origin xyz="0.0 0.0 -0.16" rpy="0.0 0.0 0.0"/>
+        <geometry>
+            <cylinder length="0.25" radius="0.04" />
+        </geometry>
+    </collision>
+</link>
+
+<link name="r_forearm">
+    <visual name="">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+            <mesh filename="package://reachy/meshes/forearm.dae"/>
+        </geometry>
+    </visual>
+    <collision>
+        <origin xyz="0.0 0.0 -0.058" rpy="0.0 0.0 0.0"/>
+        <geometry>
+            <cylinder length="0.09" radius="0.04" />
+        </geometry>
+    </collision>
+</link>
+
+<link name="r_wrist">
+    <visual name="">
+        <origin xyz="0.0 0.0 -0.100" rpy="0.0 0.0 0.0"/>
+        <geometry>
+            <mesh filename="package://reachy/meshes/wrist.dae"/>
+        </geometry>
+    </visual>
+    <collision>
+        <origin xyz="0.0 0.0 -0.18" rpy="0.0 0.0 0.0"/>
+        <geometry>
+            <cylinder length="0.14" radius="0.035" />
+        </geometry>
+    </collision>
+</link>
+
+<link name="r_wrist2hand">
+    <visual name="">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 0.0 0.0"/>
+        <geometry>
+            <mesh filename="package://reachy/meshes/wrist2hand.dae"/>
+        </geometry>
+    </visual>
+    <collision>
+        <origin xyz="0.0 0.0 -0.03" rpy="0.0 0.0 0.0"/>
+        <geometry>
+            <cylinder length="0.06" radius="0.03" />
+        </geometry>
+    </collision>
+</link>
+
+<link name="r_gripper_thumb">
+    <visual name="">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 1.57 0.0"/>
+        <geometry>
+            <mesh filename="package://reachy/meshes/r_gripper_thumb.dae"/>
+        </geometry>
+    </visual>
+    <collision>
+        <origin xyz="0.0 0.02 -0.06" rpy="0.0 1.57 0.0"/>
+        <geometry>
+            <box size="0.1 0.012 0.035" />
+        </geometry>
+    </collision>
+</link>
+    
+<link name="r_gripper_finger">
+    <visual name="">
+        <origin xyz="0.0 0.0 0.0" rpy="0.0 1.57 0.0"/>
+        <geometry>
+            <mesh filename="package://reachy/meshes/r_gripper_finger.dae"/>
+        </geometry>
+    </visual>
+    <collision>
+        <origin xyz="0.0 -0.01 -0.02" rpy="0.0 1.57 0.0"/>
+        <geometry>
+            <box size="0.1 0.012 0.035" />
+        </geometry>
+    </collision>
+</link>
+
+<link name="r_arm_tip"/>
+
+<!-- Head and Torso joints -->
+
+<joint name="pedestal" type="fixed">
+    <origin xyz="0 0 1" rpy="0 0 0" />
+    <parent link="pedestal" />
+    <child link="torso" />
+</joint>
+
+<!-- Right Arm joint -->
+
+<joint name="r_shoulder_pitch" type="revolute">
+    <origin xyz="0.0 -0.19 0.0" rpy="0.0 0.0 0.0"/>
+    <parent link="torso"/> 
+    <child link="r_shoulder"/>
+    <axis xyz="0 1 0"/>
+   <limit lower="-2.618" upper="1.57" effort="10." velocity="0.0"/>
+</joint>
+
+<joint name="r_shoulder_roll" type="revolute">
+    <origin xyz="0 0 0" rpy="0.0 0.0 0.0"/>
+    <parent link="r_shoulder"/>
+    <child link="r_shoulder_x"/>
+    <axis xyz="1 0 0"/>
+   <limit lower="-3.14" upper="0.174" effort="10." velocity="0.0"/>
+</joint>
+
+<joint name="r_arm_yaw" type="revolute">
+    <origin xyz="0 0 0" rpy="0.0 0.0 0.0"/>
+    <parent link="r_shoulder_x"/>
+    <child link="r_upper_arm"/>
+    <axis xyz="0 0 1"/>
+   <limit lower="-1.57" upper="1.57" effort="10." velocity="0.0"/>
+</joint>
+
+<joint name="r_elbow_pitch" type="revolute">
+    <origin xyz="0 0 -0.28" rpy="0.0 0.0 0.0"/>
+    <parent link="r_upper_arm"/>
+    <child link="r_forearm"/>
+    <axis xyz="0 1 0"/>
+   <limit lower="-2.182" upper="0" effort="10." velocity="0.0"/>
+</joint>
+
+<joint name="r_forearm_yaw" type="revolute">
+    <origin xyz="0 0 0" rpy="0.0 0.0 0.0"/>
+    <parent link="r_forearm"/>
+    <child link="r_wrist"/>
+    <axis xyz="0 0 1"/>
+   <limit lower="-1.745" upper="1.745" effort="10." velocity="0.0"/>
+</joint>
+
+<joint name="r_wrist_pitch" type="revolute">
+    <origin xyz="0 0 -0.25" rpy="0.0 0.0 0.0"/>
+    <parent link="r_wrist"/>
+    <child link="r_wrist2hand"/>
+    <axis xyz="0 1 0"/>
+   <limit lower="-0.785" upper="0.785" effort="10." velocity="0.0"/>
+</joint>
+
+
+<joint name="r_wrist_roll" type="revolute">
+    <origin xyz="0 0 -0.0325" rpy="0.0 0.0 0.0"/>
+    <parent link="r_wrist2hand"/>
+    <child link="r_gripper_thumb"/>
+    <axis xyz="1 0 0"/>
+   <limit lower="-0.785" upper="0.785" effort="10." velocity="0.0"/>
+</joint>
+
+<joint name="r_gripper" type="revolute">
+    <origin xyz="0.0 -0.037 -0.03998" rpy="0.0 0.0 0.0"/>
+    <parent link="r_gripper_thumb"/>
+    <child link="r_gripper_finger"/>
+    <axis xyz="1 0 0"/>
+   <limit lower="-1.2" upper="0.35" effort="10." velocity="0.0"/>
+</joint>
+
+<joint name="r_tip" type="fixed">
+    <origin xyz="0 -0.012 -0.085" rpy="0 0 0" />
+    <parent link="r_gripper_thumb" />
+    <child link="r_arm_tip" />
+</joint>
+
+</robot>
