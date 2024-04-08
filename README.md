@@ -1,6 +1,6 @@
 # Reachy KDL Kinematics node
 
-This package was obtained at the github of Pollen-Robotics and is being used for academic research.
+This package was obtained at the github of Pollen-Robotic, has modified and is being used for academic research.
 
 ## Getting started
 
