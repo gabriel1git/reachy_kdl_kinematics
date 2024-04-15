@@ -50,7 +50,7 @@ class ReachyKdlKinematics(LifecycleNode):
         self.averaged_pose = {}
         self.max_joint_vel = {}
 
-        for prefix in ('l', 'r'):
+        for prefix in ('r'):
             arm = f'{prefix}_arm'
 
             chain, fk_solver, ik_solver = generate_solver(self.urdf, 'torso', f'{prefix}_arm_tip')
@@ -197,7 +197,7 @@ class ReachyKdlKinematics(LifecycleNode):
 
         msg = Float64MultiArray()
         msg.data = sol
-
+        
         forward_publisher.publish(msg)
 
     def on_averaged_target_pose(self, msg: PoseStamped, name, q0, forward_publisher):
