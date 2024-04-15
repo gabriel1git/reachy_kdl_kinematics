@@ -26,6 +26,7 @@ setup(
     entry_points={
         'console_scripts': [
             'ikine = reachy_kdl_kinematics.reachy_kdl_kinematics_node:main',
+            'pub_ikine = reachy_kdl_kinematics.inverse_kinematics:main',
         ],
     },
 )
