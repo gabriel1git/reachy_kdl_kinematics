@@ -1,5 +1,7 @@
 # Reachy KDL Kinematics
 
+![image](https://github.com/gabriel1git/reachy_kdl_kinematics/assets/86564054/8149cf94-79a1-4c34-ae88-264f95f2fd5d)
+
 This package was obtained at the github of Pollen-Robotic, has modified and is being used for academic research.
 
 ## Getting started
