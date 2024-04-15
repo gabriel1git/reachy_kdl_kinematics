@@ -1,6 +1,4 @@
-# Reachy KDL Kinematics node
-
-![image](https://github.com/gabriel1git/reachy_kdl_kinematics/assets/86564054/8149cf94-79a1-4c34-ae88-264f95f2fd5d)
+# Reachy KDL Kinematics
 
 This package was obtained at the github of Pollen-Robotic, has modified and is being used for academic research.
 
@@ -22,6 +20,3 @@ Please note that in order to work properly, this node requires the "/robot_descr
 ## Install
 
 sudo apt install python3-pykdl# reachy_kdl_kinematics
-# reachy_kdl_kinematics
-
-
