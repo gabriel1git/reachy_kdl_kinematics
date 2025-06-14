@@ -27,6 +27,7 @@ setup(
         'console_scripts': [
             'ikine = reachy_kdl_kinematics.reachy_kdl_kinematics_node:main',
             'pub_ikine = reachy_kdl_kinematics.inverse_kinematics:main',
+            'publisher_move = reachy_kdl_kinematics.pub_move:main'
         ],
     },
 )

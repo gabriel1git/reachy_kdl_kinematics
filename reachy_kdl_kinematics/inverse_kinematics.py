@@ -2,9 +2,10 @@ import rclpy
 import numpy as np
 from spatialmath import *
 from rclpy.node import Node
+from std_msgs.msg import String
 from geometry_msgs.msg import PoseStamped
 from sensor_msgs.msg import JointState
-from roboticstoolbox import quintic
+#from roboticstoolbox import quintic
 from std_msgs.msg import Float64MultiArray
 from scipy.spatial.transform import Rotation
 
@@ -20,6 +21,12 @@ class MinimalPublisher(Node):
         self.timer = self.create_timer(timer_period, self.timer_callback)
         self.timer2 = self.create_timer(timer_period2, self.timer_callback2)
         self.i, self.indice = 0,0
+
+        self.sub_move = self.create_subscription(
+            String, 
+            'move',
+            self.listener_move,
+            10)
 
         #read joint data
         self.subcriber = self.create_subscription(
@@ -52,7 +59,7 @@ class MinimalPublisher(Node):
         self.T = [0.,0.,0.,0.,0.,0.,0.]
         self.joint_state = JointState()
 
-        A = np.array([
+        self.A = np.array([
         [0, 0, -1, 0.3],
         [0, 1, 0, -0.4],  
         [1, 0, 0, -0.3],
@@ -80,36 +87,49 @@ class MinimalPublisher(Node):
         [0, 0, 0, 1],  
         ])
 
-        xA, yA, zA = A[:3, 3]
-        xB, yB, zB = B[:3, 3]
-        xC, yC, zC = C[:3, 3]
-        xD, yD, zD = D[:3, 3]
+        xA, yA, zA = self.A[:3, 3]
+        #xB, yB, zB = B[:3, 3]
+        #xC, yC, zC = C[:3, 3]
+        #xD, yD, zD = D[:3, 3]
 
-        self.x = [xA, xB, xC, xD]
-        self.y = [yA, yB, yC, yD]
-        self.z = [zA, zB, zC, zD]
+        self.x = [xA]#, xB, xC, xD]
+        self.y = [yA]#, yB, yC, yD]
+        self.z = [zA]#, zB, zC, zD]
 
-        qA = Rotation.from_matrix(A[:3, :3]).as_quat()
-        qB = Rotation.from_matrix(B[:3, :3]).as_quat()
-        qC = Rotation.from_matrix(C[:3, :3]).as_quat()
-        qD = Rotation.from_matrix(D[:3, :3]).as_quat()
+        qA = Rotation.from_matrix(self.A[:3, :3]).as_quat()
+        #qB = Rotation.from_matrix(B[:3, :3]).as_quat()
+        #qC = Rotation.from_matrix(C[:3, :3]).as_quat()
+        #qD = Rotation.from_matrix(D[:3, :3]).as_quat()
 
-        self.q = [qA, qB, qC, qD]
-    
+        self.q = [qA]
+    def listener_move(self, msg):
+        self.A = np.array(eval(msg.data))
+        xA, yA, zA = self.A[:3, 3]
+        self.x = [xA]#, xB, xC, xD]
+        self.y = [yA]#, yB, yC, yD]
+        self.z = [zA]#, zB, zC, zD]
+        qA = Rotation.from_matrix(self.A[:3, :3]).as_quat()
+        self.q = [qA]
+
+    def quintic_trajectory_array(self, q0, qf, N=10):
+        """
+        Gera N pontos de uma interpolação quintic de q0 até qf.
+        """
+        t_vals = np.linspace(0, 1, N)
+        return [q0 + (qf - q0)*(10*t**3 - 15*t**4 + 6*t**5) for t in t_vals]
 
     def timer_data(self):
         q = [self.q1, self.q2, self.q3, self.q4, self.q5, self.q6, self.q7]
         #aux = [0.,0.,0.,-np.pi/2.,0.,0.,0.]
         #q = [aux[0], aux[1], aux[2], aux[3], aux[4], aux[5], aux[6]]#self.ik()
         
-        self.j1 = quintic(self.qant[0],q[0],10).q
-        self.j2 = quintic(self.qant[1],q[1],10).q
-        self.j3 = quintic(self.qant[2],q[2],10).q
-        self.j4 = quintic(self.qant[3],q[3],10).q
-        self.j5 = quintic(self.qant[4],q[4],10).q
-        self.j6 = quintic(self.qant[5],q[5],10).q
-        self.j7 = quintic(self.qant[6],q[6],10).q
-
+        self.j1 = self.quintic_trajectory_array(self.qant[0], q[0], 10)
+        self.j2 = self.quintic_trajectory_array(self.qant[1], q[1], 10)
+        self.j3 = self.quintic_trajectory_array(self.qant[2], q[2], 10)
+        self.j4 = self.quintic_trajectory_array(self.qant[3], q[3], 10)
+        self.j5 = self.quintic_trajectory_array(self.qant[4], q[4], 10)
+        self.j6 = self.quintic_trajectory_array(self.qant[5], q[5], 10)
+        self.j7 = self.quintic_trajectory_array(self.qant[6], q[6], 10)
         self.qant = q
 
     def timer_callback(self):
@@ -123,18 +143,6 @@ class MinimalPublisher(Node):
         msg.pose.orientation.y = self.q[0][1]
         msg.pose.orientation.z = self.q[0][2]
         msg.pose.orientation.w = self.q[0][3]
-
-        if self.i == 5:
-            self.indice = 1
-        elif self.i == 10:
-            self.indice = 2
-        elif self.i == 15:
-            self.indice = 3
-        elif self.i == 20:
-            self.indice = 0
-            self.i = 0
-        
-        self.i += 1
 
         self.publisher_.publish(msg)
 

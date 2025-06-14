@@ -43,6 +43,11 @@ def generate_launch_description():
             name='pub_ikine',
         ),
         Node(
+            package='reachy_kdl_kinematics',
+            executable='publisher_move',
+            name='publisher',
+        ),
+        Node(
             package='rviz2',
             executable='rviz2',
             output='screen'),
